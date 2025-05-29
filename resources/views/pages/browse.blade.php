@@ -279,13 +279,13 @@
                             $events = [
                                 [
                                     'title' => 'One Love Asia 2025',
-                                    'dates' => 'October 4–5, 2025',
+                                    'dates' => 'October 4-5, 2025',
                                     'venue' => 'The Meadows, Gardens by the Bay, Singapore',
                                     'category' => 'Festival',
                                     'price_php' => '₱8,100 - ₱23,800',
                                     'details' => 'A celebration of Asian culture, unity, and diversity featuring artists like Eric Zhou, Benjamin Kheng, and JJ Lin.',
                                     'link' => '#',
-                                    'image' => null,
+                                    'image' => asset('images/images.jpg'),
                                 ],
                                 [
                                     'title' => 'Shillong Cherry Blossom Festival',
@@ -299,7 +299,7 @@
                                 ],
                                 [
                                     'title' => 'Rolling Loud Thailand 2025',
-                                    'dates' => 'November 14–16, 2025',
+                                    'dates' => 'November 14-16, 2025',
                                     'venue' => 'TBA, Thailand',
                                     'category' => 'Hip-Hop Festival',
                                     'price_php' => '₱10,000',
@@ -309,7 +309,7 @@
                                 ],
                                 [
                                     'title' => 'Round Festival 2025',
-                                    'dates' => 'June 21–22, 2025',
+                                    'dates' => 'June 21-22, 2025',
                                     'venue' => 'Zepp Kuala Lumpur, Malaysia',
                                     'category' => 'Music Festival',
                                     'price_php' => '₱1,800',
@@ -319,7 +319,7 @@
                                 ],
                                 [
                                     'title' => 'Equation Festival 2025',
-                                    'dates' => 'April 4–6, 2025',
+                                    'dates' => 'April 4-6, 2025',
                                     'venue' => 'Mo Luong Cave, Mai Chau, Vietnam',
                                     'category' => 'Electronic Music',
                                     'price_php' => 'Free / Varies',
@@ -329,7 +329,7 @@
                                 ],
                                 [
                                     'title' => 'Nano-Mugen Festival 2025',
-                                    'dates' => 'May 24–25 (Jakarta) & May 31–June 1 (Yokohama)',
+                                    'dates' => 'May 24-25 (Jakarta) & May 31-June 1 (Yokohama)',
                                     'venue' => 'Ecopark Ancol, Jakarta & K-Arena Yokohama, Japan',
                                     'category' => 'Rock Festival',
                                     'price_php' => '₱3,400',

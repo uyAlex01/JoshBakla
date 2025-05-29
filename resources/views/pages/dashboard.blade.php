@@ -794,7 +794,7 @@
                 <div class="ticket-list">
                     @forelse($upcomingTickets as $ticket)
                             <div onclick="window.location.href='{{ route('tickets.show', ['ticket' => $ticket['id']]) }}'>
-                                                    <div class=" ticket-image">{{ $ticket['icon'] }}</div>
+                                                                            <div class=" ticket-image">{{ $ticket['icon'] }}</div>
                             <div class="ticket-info">
                                 <h4 class="ticket-title">{{ $ticket['event'] }}</h4>
                                 <div class="ticket-date">{{ \Carbon\Carbon::parse($ticket['date'])->format('l, F j, Y') }}</div>
@@ -896,7 +896,7 @@
     </section>
     </div>
 
-    // Add this script to your dashboard.blade.php
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Refresh stats every 30 seconds
