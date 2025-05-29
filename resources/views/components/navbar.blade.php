@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg fixed-top py-2"
   style="background-color: rgba(15, 15, 15, 0.85); backdrop-filter: blur(10px);">
   <div class="container-fluid">
-    <!-- Brand with logo and cart icon on left -->
+    <!-- Brand with logo on left -->
     <div class="d-flex align-items-center">
       <a class="navbar-brand d-flex align-items-center me-3"
         href="{{auth()->user() ? route('dashboard') : route('home')}}" style="color: #00F6FF;">
@@ -12,19 +12,6 @@
         <!-- Brand Text -->
         <span class="fw-bold ms-2" style="color: #8F00FF; font-size: 1.5rem;">RHYTMX</span>
       </a>
-
-      @auth
-      <!-- Cart icon with custom color -->
-      <a class="nav-link position-relative {{ Route::is('cart.view') ? 'active' : '' }}" href="{{ route('cart.view') }}"
-      style="color: #00F6FF;">
-      <i class="bi bi-cart3 fs-5"></i>
-      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
-        style="background-color: #8F00FF; color: white;">
-        3
-        <span class="visually-hidden">items in cart</span>
-      </span>
-      </a>
-    @endauth
     </div>
 
     <!-- Mobile toggle button -->
@@ -36,13 +23,6 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <!-- Centered navigation -->
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        {{-- <li class="nav-item">
-          <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" href="{{ route('home') }}"
-            style="color: #00F6FF;">
-            <i class="bi bi-house-door me-1"></i> Home
-          </a>
-        </li> --}}
-
         <li class="nav-item">
           <a class="nav-link {{ Route::is('home') ? 'active' : '' }}"
             href="{{auth()->user() ? route('dashboard') : route('home')}}" style="color: #00F6FF;">
@@ -50,93 +30,18 @@
           </a>
         </li>
 
-        <!-- Cities dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="citiesDropdown" role="button" data-bs-toggle="dropdown"
+        <li class="nav-item">
+          <a class="nav-link {{ Route::is('events.browse') ? 'active' : '' }}" href="{{ route('events.browse') }}"
             style="color: #00F6FF;">
-            <i class="bi bi-geo-alt me-1"></i> Cities
+            <i class="bi bi-calendar3 me-1"></i> Browse Events
           </a>
-          <ul class="dropdown-menu" aria-labelledby="citiesDropdown" style="background-color: rgba(15, 15, 15, 0.95);">
-            <li>
-              <h6 class="dropdown-header" style="color: #8F00FF;">Popular Cities</h6>
-            </li>
-            <li><a class="dropdown-item" href="/events/new-york" style="color: #00F6FF;">New York</a></li>
-            <li><a class="dropdown-item" href="/events/los-angeles" style="color: #00F6FF;">Los Angeles</a></li>
-            <li><a class="dropdown-item" href="/events/chicago" style="color: #00F6FF;">Chicago</a></li>
-            <li>
-              <hr class="dropdown-divider" style="border-color: #333;">
-            </li>
-            <li><a class="dropdown-item" href="/events/all-cities" style="color: #00F6FF;">All Cities</a></li>
-          </ul>
         </li>
 
-        <!-- Replace the categories dropdown section in navbar.blade.php with this: -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown"
+        <li class="nav-item">
+          <a class="nav-link {{ Route::is('organize') ? 'active' : '' }}" href="{{ route('organize') }}"
             style="color: #00F6FF;">
-            <i class="bi bi-grid me-1"></i> Categories
+            <i class="bi bi-plus-circle me-1"></i> Organize
           </a>
-          <ul class="dropdown-menu" aria-labelledby="categoriesDropdown"
-            style="background-color: rgba(15, 15, 15, 0.95);">
-            <li>
-              <h6 class="dropdown-header" style="color: #8F00FF;">Event Types</h6>
-            </li>
-            <!-- Manually added specific event types -->
-            <li>
-              <a class="dropdown-item" href="{{ route('events.browse', ['category' => 'concerts']) }}"
-                style="color: #00F6FF;">
-                <i class="bi bi-music-note-list me-2"></i> Concerts
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="{{ route('events.browse', ['category' => 'music_festivals']) }}"
-                style="color: #00F6FF;">
-                <i class="bi bi-boombox me-2"></i> Music Festivals
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="{{ route('events.browse', ['category' => 'battle_of_the_bands']) }}"
-                style="color: #00F6FF;">
-                <i class="bi bi-trophy me-2"></i> Battle of the Bands
-              </a>
-            </li>
-
-            <!-- Existing dynamic categories -->
-            @foreach($categories as $category)
-        <li>
-          <a class="dropdown-item" href="{{ route('category.show', $category->slug) }}" style="color: #00F6FF;">
-          <i class="bi {{ $category->icon }} me-2"></i> {{ $category->name }}
-          </a>
-        </li>
-      @endforeach
-
-            <li>
-              <hr class="dropdown-divider" style="border-color: #333;">
-            </li>
-            <li>
-              <a class="dropdown-item" href="{{ route('categories.index') }}" style="color: #00F6FF;">
-                <i class="bi bi-grid-fill me-2"></i> All Categories
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <!-- Events dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle {{ Route::is('browse', 'organize') ? 'active' : '' }}" href="#"
-            id="eventsDropdown" role="button" data-bs-toggle="dropdown" style="color: #00F6FF;">
-            <i class="bi bi-calendar3 me-1"></i> Events
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="eventsDropdown" style="background-color: rgba(15, 15, 15, 0.95);">
-            <li><a class="dropdown-item {{ Route::is('events.index') ? 'active' : '' }}"
-                href="{{ route('events.browse') }}" style="color: #00F6FF;">Browse Events</a></li>
-            <li><a class="dropdown-item {{ Route::is('organize') ? 'active' : '' }}" href="{{ route('organize') }}"
-                style="color: #00F6FF;">Organize Event</a></li>
-            <li>
-              <hr class="dropdown-divider" style="border-color: #333;">
-            </li>
-            <li><a class="dropdown-item" href="#" style="color: #00F6FF;">Upcoming Events</a></li>
-          </ul>
         </li>
 
         <li class="nav-item">
@@ -169,6 +74,19 @@
 
         <ul class="navbar-nav">
           @auth
+        <!-- Cart icon moved to right side -->
+        <li class="nav-item me-2">
+        <a class="nav-link position-relative {{ Route::is('cart.view') ? 'active' : '' }}"
+          href="{{ route('cart.view') }}" style="color: #00F6FF;">
+          <i class="bi bi-cart3 fs-5"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill"
+          style="background-color: #8F00FF; color: white;">
+          3
+          <span class="visually-hidden">items in cart</span>
+          </span>
+        </a>
+        </li>
+
         <!-- Notifications dropdown -->
         <li class="nav-item dropdown me-2">
         <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
