@@ -10,11 +10,23 @@
             --jet-black: #121212;
             --jet-black-light: #1E1E1E;
             --sunset-coral: #FF4F81;
+            --dashboard-bg-dark: #121212;
+            /* Add this line */
+        }
+
+        body {
+            background: var(--dashboard-bg-dark);
+            color: var(--platinum-gray);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
 
         /* Main content container */
         .browse-page {
-            background: var(--jet-black);
+            background: var(--dashboard-bg-dark);
+            /* Changed from transparent to match dashboard */
             color: var(--platinum-gray);
             padding: 5rem 0;
             min-height: 100vh;
