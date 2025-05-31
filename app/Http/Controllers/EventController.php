@@ -8,38 +8,29 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    // Show browse page with filters
     public function browse(Request $request)
-    {
-        $query = Event::query()->with('category');
+{
+    // Retrieve events from the database, optionally apply filters from request
+    $query = Event::query();
 
-        // Search
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter by category
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // Sorting
-        switch ($request->sort) {
-            case 'price_low':
-                $query->orderBy('price');
-                break;
-            case 'price_high':
-                $query->orderByDesc('price');
-                break;
-            default:
-                $query->latest();
-        }
-
-        $events = $query->paginate(12);
-        $categories = Category::all();
-
-        return view('pages.browse', compact('events', 'categories'));
+    if ($request->filled('search')) {
+        $query->where('title', 'like', '%' . $request->search . '%');
     }
+
+    if ($request->filled('category')) {
+        $query->where('category', $request->category);
+    }
+
+    if ($request->filled('date')) {
+        // You can implement filtering by date here, e.g.:
+        // Filter by 'today', 'weekend', 'month' with date ranges
+    }
+
+    $events = $query->get();
+
+    return view('events.browse', compact('events'));
+}
+
 
     // Show single event
     public function show(Event $event)
@@ -60,4 +51,27 @@ class EventController extends Controller
 
         return view('events.attended', compact('events'));
     }
+
+   public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $events = Event::where('name', 'LIKE', "%{$query}%")
+            ->orWhere('description', 'LIKE', "%{$query}%")
+            ->limit(5)
+            ->get();
+
+        return response()->json($events);
+    }
+
+    
+
+
+
+
+
 }

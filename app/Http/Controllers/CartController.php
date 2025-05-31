@@ -3,76 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    /**
-     * Add an event to the user's cart.
-     */
-    public function addToCart(Request $request)
+    public function add(Request $request)
 {
-    $validated = $request->validate([
-        'event_id' => 'required|exists:events,id',
-        'quantity' => 'required|integer|min:1|max:10' // Example validation
-    ]);
+    $eventId = $request->input('event_id');
 
-    // Check ticket availability
-    $event = Event::find($request->event_id);
-    if ($event->available_tickets < $request->quantity) {
-        return back()->with('error', 'Not enough tickets available!');
+    if (!$eventId) {
+        return response()->json(['success' => false, 'message' => 'No event ID provided'], 400);
     }
 
-    // Add to cart logic
-    Cart::add($event, $request->quantity);}
-    
-  
+    // Example: Add the event to cart, assuming you have Cart model and user logged in
+    try {
+        Cart::create([
+            'user_id' => auth()->id(),
+            'event_id' => $eventId,
+            'quantity' => 1,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Failed to add to cart'], 500);
+    }
 
-    /**
-     * Show the cart page with all items.
-     */
+    return response()->json(['success' => true]);
+}
+
+
     public function viewCart()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Please log in to view your cart.');
-        }
+        $userId = Auth::id();
+        $cartItems = Cart::with('event')->where('user_id', $userId)->get();
 
-        $cartItems = Auth::user()->carts()->with('event')->get();
-
-        $total = $cartItems->sum(function ($item) {
-            return $item->event->price * $item->quantity;
-        });
-
-        return view('pages.cart', compact('cartItems', 'total'));
-    }
-
-    /**
-     * Remove a single event from the cart.
-     */
-    public function removeFromCart($eventId)
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        Auth::user()->carts()->where('event_id', $eventId)->delete();
-
-        return redirect()->back()->with('success', 'Event removed from cart!');
-    }
-
-    /**
-     * Clear the user's entire cart.
-     */
-    public function clearCart()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        Auth::user()->carts()->delete();
-
-        return redirect()->back()->with('success', 'Cart cleared!');
+        return view('cart.view', compact('cartItems'));
     }
 }

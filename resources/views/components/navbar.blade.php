@@ -1,6 +1,7 @@
 <!-- resources/views/components/navbar.blade.php -->
 <nav class="navbar navbar-expand-lg fixed-top py-2"
   style="background-color: rgba(15, 15, 15, 0.85); backdrop-filter: blur(10px);">
+  <div id="searchResults" style="position: absolute; top: 100%; right: 0; width: 300px; max-height: 300px; overflow-y: auto; background-color: #121212; border: 1px solid #8F00FF; z-index: 1050;"></div>
   <div class="container-fluid">
     <!-- Brand with logo on left -->
     <div class="d-flex align-items-center">
@@ -37,12 +38,6 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link {{ Route::is('organize') ? 'active' : '' }}" href="{{ route('organize') }}"
-            style="color: #00F6FF;">
-            <i class="bi bi-plus-circle me-1"></i> Organize
-          </a>
-        </li>
 
         <li class="nav-item">
           <a class="nav-link {{ Route::is('pricing') ? 'active' : '' }}" href="{{ route('pricing') }}"
@@ -62,15 +57,19 @@
       <!-- Right-aligned items -->
       <div class="d-flex">
         <!-- Search bar -->
-        <form class="d-flex me-3" role="search">
-          <div class="input-group">
-            <input class="form-control" type="search" placeholder="Search events..." aria-label="Search"
-              style="background-color: rgba(255,255,255,0.1); color: white; border-color: #8F00FF;">
-            <button class="btn" type="submit" style="background-color: #8F00FF; color: white;">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
+        <form class="d-flex me-3 position-relative" role="search" id="searchForm">
+  <div class="input-group">
+    <input id="searchInput" class="form-control" type="search" placeholder="Search events..." aria-label="Search"
+      autocomplete="off"
+      style="background-color: rgba(255,255,255,0.1); color: white; border-color: #8F00FF;">
+    <button class="btn" type="submit" style="background-color: #8F00FF; color: white;">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+</form>
+
+
+
 
         <ul class="navbar-nav">
           @auth
@@ -245,4 +244,106 @@
     });
     });
   </script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const searchForm = document.getElementById('searchForm');
+
+    // Prevent form submit to avoid page reload
+    searchForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if(searchResults.innerHTML.trim() !== '') {
+        // If user presses Enter, redirect to first event page
+        const firstEvent = searchResults.querySelector('.event-card');
+        if (firstEvent) {
+          window.location.href = firstEvent.dataset.url;
+        }
+      }
+    });
+
+    searchInput.addEventListener('input', function () {
+      const query = this.value.trim();
+
+      if (query.length < 2) {
+        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      fetch(`{{ route('events.search') }}?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(events => {
+          if (events.length === 0) {
+            searchResults.innerHTML = `<p class="text-center p-3" style="color: #FF4F81;">No events found</p>`;
+            searchResults.style.display = 'block';
+            return;
+          }
+
+          let html = '';
+          events.forEach(event => {
+            html += `
+              <div class="event-card p-3" data-url="/events/${event.id}" style="border-bottom: 1px solid #8F00FF; cursor: pointer;">
+                <h5 style="color: #00F6FF; margin-bottom: 0.25rem;">${event.name}</h5>
+                <p style="color: #E5E5E5; font-size: 0.9rem; margin-bottom: 0.25rem;">${event.description.substring(0, 80)}...</p>
+                <small style="color: #8F00FF;">Date: ${new Date(event.date).toLocaleDateString()}</small>
+              </div>
+            `;
+          });
+          searchResults.innerHTML = html;
+          searchResults.style.display = 'block';
+
+          // Add click to redirect on each card
+          document.querySelectorAll('.event-card').forEach(card => {
+            card.addEventListener('click', () => {
+              window.location.href = card.dataset.url;
+            });
+          });
+        })
+        .catch(() => {
+          searchResults.innerHTML = `<p class="text-center p-3" style="color: #FF4F81;">Error loading results</p>`;
+          searchResults.style.display = 'block';
+        });
+    });
+
+    // Hide search results if click outside
+    document.addEventListener('click', (e) => {
+      if (!searchResults.contains(e.target) && e.target !== searchInput) {
+        searchResults.style.display = 'none';
+      }
+    });
+  });
+
+  document.getElementById('searchForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // stop form from submitting/reloading page
+
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!query) {
+    alert('Please enter an event name to search.');
+    return;
+  }
+
+  // Get all event cards (update the selector if your card class is different)
+  const eventCards = document.querySelectorAll('.browse-events-grid .event-card');
+  let foundIndex = -1;
+
+  eventCards.forEach((card, index) => {
+    const title = card.querySelector('.event-title').textContent.toLowerCase();
+    if (title.includes(query)) {
+      foundIndex = index;
+    }
+  });
+
+  if (foundIndex === -1) {
+    alert('No event found with that name.');
+    return;
+  }
+
+  // Call your existing function to open the popup/modal by index
+  openPopup(foundIndex);
+});
+
+</script>
+
 @endpush

@@ -47,4 +47,9 @@ class Event extends Model
             ->orderBy('date')
             ->limit(4);
     }
+
+    public function wishlists()
+{
+    return $this->hasMany(Wishlist::class);
+}
 }

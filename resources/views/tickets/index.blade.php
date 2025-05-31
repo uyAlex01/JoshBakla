@@ -1,40 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-[#121212] text-[#E5E5E5] py-8">
-        <div class="container mx-auto px-4">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <h1
-                    class="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#8F00FF] to-[#00F6FF]">
-                    All Categories
-                </h1>
-                <p class="text-[#E5E5E5]/80">
-                    Browse our curated music experiences
-                </p>
-            </div>
+<div class="container py-5" style="min-height: 80vh; background-color: #121212; color: #E5E5E5;">
+  <h1 class="mb-4" style="color: #8F00FF; font-weight: bold;">My Tickets</h1>
 
-            <!-- Categories Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                @foreach([['id' => 1, 'name' => 'Concerts', 'icon' => 'bi-mic', 'desc' => 'Live performances'], ['id' => 2, 'name' => 'Music Festivals', 'icon' => 'bi-boombox', 'desc' => 'Multi-day experiences'], ['id' => 3, 'name' => 'Battle of the Bands', 'icon' => 'bi-trophy', 'desc' => 'Talent competitions'], ['id' => 4, 'name' => 'Album Release Parties', 'icon' => 'bi-vinyl', 'desc' => 'New music celebrations'], ['id' => 5, 'name' => 'DJ Sets / Club Nights', 'icon' => 'bi-disc', 'desc' => 'Electronic dance events'], ['id' => 6, 'name' => 'Orchestral Performances', 'icon' => 'bi-music-note-list', 'desc' => 'Classical concerts'], ['id' => 7, 'name' => 'Opera Shows', 'icon' => 'bi-mask', 'desc' => 'Dramatic vocal arts'], ['id' => 8, 'name' => 'Tribute Shows', 'icon' => 'bi-stars', 'desc' => 'Legend homages'], ['id' => 9, 'name' => 'Record Store Events', 'icon' => 'bi-shop', 'desc' => 'Vinyl culture'], ['id' => 10, 'name' => 'Music Award Ceremonies', 'icon' => 'bi-award', 'desc' => 'Industry celebrations']] as $category)
-                    <a href="{{ route('categories.show', $category['id']) }}" 
-                       class="group bg-[#1E1E1E] rounded-xl p-6 border border-[#333] hover:border-[#00F6FF] transition-all duration-300 hover:shadow-lg hover:shadow-[#8F00FF]/10">
-                        <div class="flex items-center gap-4">
-                            <div class="bg-[#8F00FF]/10 p-3 rounded-lg border border-[#8F00FF]/20 group-hover:bg-[#8F00FF]/20 transition-colors">
-                                <i class="bi {{ $category['icon'] }} text-[#00F6FF] text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold group-hover:text-[#00F6FF] transition-colors">{{ $category['name'] }}</h3>
-                        </div>
-                        <p class="mt-4 text-[#E5E5E5]/70">{{ $category['desc'] }}</p>
-                        <div class="mt-4 flex justify-end">
-                            <span class="inline-flex items-center text-[#00F6FF] group-hover:text-white">
-                                Explore
-                                <i class="bi bi-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                            </span>
-                        </div>
-                    </a>
-                @endforeach
+  @if($tickets->isEmpty())
+    <p style="color: #FF4F81;">You have no tickets yet. Browse events and get yours!</p>
+  @else
+    <div class="row g-4">
+      @foreach($tickets as $ticket)
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100" 
+            style="background-color: #121212; border: 2px solid #8F00FF; box-shadow: 0 0 10px #00F6FF;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: #00F6FF;">{{ $ticket->event->name }}</h5>
+              <p class="card-text" style="color: #E5E5E5;">
+                <strong>Date:</strong> {{ $ticket->event->date->format('F j, Y') }}<br>
+                <strong>Venue:</strong> {{ $ticket->event->venue }}<br>
+                <strong>Seat:</strong> {{ $ticket->seat ?? 'General Admission' }}
+              </p>
             </div>
+            <div class="card-footer text-end" style="background-color: #121212; border-top: 1px solid #8F00FF;">
+              <a href="{{ route('events.show', $ticket->event->id) }}" 
+                 class="btn btn-sm" 
+                 style="background-color: #8F00FF; color: #121212; font-weight: 600;">
+                View Event
+              </a>
+            </div>
+          </div>
         </div>
+      @endforeach
     </div>
+  @endif
+</div>
 @endsection

@@ -1,32 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+use App\Models\Wishlist;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
+    
     public function index()
-    {
-        $wishlistItems = []; // Replace with actual wishlist data
+{
+    $user = Auth::user();
 
-        return view('wishlist.index', compact('wishlistItems'));
-    }
+    $wishlists = Wishlist::with('event')
+        ->where('user_id', $user->id)
+        ->get();
 
+    return view('wishlist.index', compact('wishlists'));
+}
 
-    public function add(Request $request)
-    {
-        // Logic to add an item to the wishlist
-        // Example: Wishlist::add($request->item_id);
-
-        return redirect()->route('wishlist.index')->with('success', 'Item added to wishlist.');
-    }
-
-    public function remove($id)
-    {
-        // Logic to remove an item from the wishlist
-        // Example: Wishlist::remove($id);
-
-        return redirect()->route('wishlist.index')->with('success', 'Item removed from wishlist.');
-    }
+    
 }

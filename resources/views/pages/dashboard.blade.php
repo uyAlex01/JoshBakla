@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard - Rhythmx')
-
+<a href="{{ route('wishlist.index') }}" style="color: #E5E5E5;">My Wishlist</a>
 @push('styles')
     <style>
         :root {

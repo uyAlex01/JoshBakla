@@ -46,6 +46,7 @@ public function tickets()
     return $this->hasMany(Ticket::class);
 }
 
+
 public function orders()
 {
     return $this->hasMany(Order::class);
@@ -64,5 +65,10 @@ public function wishlist()
 public function activities()
 {
     return $this->hasMany(UserActivity::class)->latest();
+}
+
+public function wishlists()
+{
+    return $this->hasMany(Wishlist::class);
 }
 }

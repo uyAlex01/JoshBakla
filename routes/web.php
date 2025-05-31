@@ -12,7 +12,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ActivityController;
 
+Route::get('/search', [EventController::class, 'search'])->name('search');
+Route::get('/events/search', [EventController::class, 'search'])->name('events.search');
+Route::get('/search', [EventController::class, 'search'])->name('search');
+Route::get('/events/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events', [ActivityController::class, 'index'])->name('activities.index');
 /*
 |--------------------------------------------------------------------------
 | Authentication Routes
@@ -73,12 +79,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Cart Routes
-    Route::prefix('cart')->controller(CartController::class)->group(function () {
-        Route::get('/', 'viewCart')->name('cart.view');
-        Route::post('/add/{event}', 'addToCart')->name('cart.add');
-        Route::post('/remove/{event}', 'removeFromCart')->name('cart.remove');
-        Route::post('/clear', 'clearCart')->name('cart.clear');
-    });
+    Route::middleware(['auth'])->group(function () {
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+});
     
     // Checkout Routes
     Route::prefix('checkout')->controller(CheckoutController::class)->group(function () {

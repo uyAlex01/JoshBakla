@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 class TicketController extends Controller
 {
     public function index()
-    {
-        // Example: retrieve all tickets (replace with your model)
-        $tickets = []; // Dummy data or use Ticket::all();
+{
+    $user = auth()->user();
 
-        return view('tickets.index', compact('tickets'));
-    }
+    $tickets = $user->tickets()->with('event')->get();
+
+    return view('tickets.index', compact('tickets'));
+}
 
     public function show($id)
     {
@@ -21,5 +22,6 @@ class TicketController extends Controller
 
         return view('tickets.show', compact('ticket'));
     }
+    
 }
 
